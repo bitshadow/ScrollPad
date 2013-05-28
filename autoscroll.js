@@ -1,16 +1,3 @@
-/**
- * Draws a rounded rectangle using the current state of the canvas. 
- * If you omit the last three params, it will draw a rectangle 
- * outline with a 5 pixel border radius 
- * @param {CanvasRenderingContext2D} ctx
- * @param {Number} x The top left x coordinate
- * @param {Number} y The top left y coordinate 
- * @param {Number} width The width of the rectangle 
- * @param {Number} height The height of the rectangle
- * @param {Number} radius The corner radius. Defaults to 5;
- * @param {Boolean} fill Whether to fill the rectangle. Defaults to false.
- * @param {Boolean} stroke Whether to stroke the rectangle. Defaults to true.
- */
 function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
   if (typeof stroke == "undefined" ) {
     stroke = true;
@@ -37,35 +24,53 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
   }
 }
 
-$(document).ready(function() {
-    var canvas = document.getElementById('autoscroll');
-    var context = canvas.getContext('2d');
+function scrollpad(canvas, pos) {
     var body = $('html,body');
+    var context = canvas.getContext('2d');
 
-    function getMousePos(canvas, evt) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-            x: evt.clientX - rect.left,
-            y: evt.clientY - rect.top
-        };
+    var size = {
+        width: window.innerWidth || document.body.clientWidth,
+        height: window.innerHeight || document.body.clientHeight
     }
 
+    var message = ' window :'+ body.width() +' , '+ body.height(); message = message + ' inner window: '+ size.width + ' , ' + size.height;
+    var rectwidth = 40
+    var rectheight = 40
+    var bodywidth = window.getComputedStyle(document.body,null).getPropertyValue("width");
+    var bodyheight = window.getComputedStyle(document.body,null).getPropertyValue("height");
+    message = message + "body params : " + bodywidth + " , " + bodyheight;
+    var canvaswidth = ParseInt(bodywidth/size.width) * rectwidth;
+    var canvasheight = (bodyheight/size.height)* rectheight;
+    message = message + " canvas: " + canvaswidth + " , " + canvasheight;
+    console.log (message);
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    //context.beginPath();
+    //context.lineWidth="1";
+    //context.strokeStyle="white";
+    context.fillStyle = "white";
+    //context.fillRect(pos.x-20,pos.y-20,40,40);
+    roundRect(context, pos.x-20, pos.y-20, 40, 40, 5, true, false)
+    //context.stroke();
+
+    body.animate({ scrollTop: (pos.y*($(window).height()/100))  }, 0);
+    body.animate({ scrollLeft: (pos.x*($(window).width()/50)) }, 0);
+}
+
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
+}
+
+$(document).ready(function() {
+    var canvas = document.getElementById('scrollpad');
     canvas.addEventListener('mousemove', function(evt) {
         var pos = getMousePos(canvas, evt);
-        var message = 'Mouse position: ' + pos.x + ',' + pos.y;
-
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        //context.beginPath();
-        //context.lineWidth="1";
-        //context.strokeStyle="white";
-        context.fillStyle = "white";
-        //context.fillRect(pos.x-20,pos.y-20,40,40);
-        roundRect(context, pos.x-20, pos.y-20, 40, 40, 5, true, false)
-        //context.stroke();
-        console.log (message);
-
-        body.animate({ scrollTop: (pos.y*($(window).height()/100))  }, 0);
-        body.animate({ scrollLeft: (pos.x*($(window).width()/50)) }, 0);
+        scrollpad(canvas, pos);
+        //var message = 'Mouse position: ' + pos.x + ',' + pos.y;
     }, false);
 
     canvas.addEventListener('click', function(evt) {
