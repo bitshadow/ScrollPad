@@ -60,6 +60,7 @@ function getViewSize() {
   var bsize = bodySize();
   var w = (clsize.width * 100) / parseInt(bsize.width);
   var h = (clsize.height * 100) / parseInt(bsize.height);
+
   var size = {
 
     width: parseInt(w),
@@ -75,15 +76,8 @@ function draw(canvas, x, y) {
     var vsize = getViewSize();
 
     context.clearRect(0, 0, canvas.width, canvas.height);
-    //context.beginPath();
-    //context.lineWidth="1";
-    //context.strokeStyle="white"
-    context.fillStyle = "white"
-    //context.fillRect(x-(vsize.width/2), x-(vsize.height/2),
-    //                 vsize.width, vsize.height, 2, true, false);
-    roundRect(context,x-(vsize.width/2), y-(vsize.height/2),
-              vsize.width, vsize.height, 2, true, false);
-    //context.stroke();
+    context.fillStyle = "white";
+    roundRect(context,x-(vsize.width/2), y-(vsize.height/2), vsize.width, vsize.height, 2, true, false);
 }
 
 //position in canvas
@@ -152,11 +146,6 @@ $(document).ready(function() {
     canvas.addEventListener('click', function(evt) {
 
         var pos = getMousePos(canvas, evt);
-
-        //TODO Use scrollTo instead 
-        //$.scrollTo({top:'0px', left:'100%'}, 800)
-        //body.animate({ scrollTop: (pos.y*50)  }, "slow");
-        //body.animate({ scrollLeft: (pos.x*50) }, "slow");
 
     }, false);
 });
