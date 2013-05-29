@@ -92,9 +92,6 @@ function scrollPage(c, pos) {
     var v = getViewSize();
     var b = bodySize();
 
-    message += "v.w: " + v.width + " v.h: " + v.height;
-    message += "b.w: " + b.width + " b.h: " + b.height;
-    console.log(message);
     var scroll = {
         x: b.width / (c.width-v.width),
         y: b.height / (c.height-v.height)
