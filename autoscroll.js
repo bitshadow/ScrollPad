@@ -5,6 +5,12 @@ var scrollPad = {
 
   cury: 0,
 
+  mousemove: false,
+
+  mousedown: false,
+
+  scroll: true,
+
   roundRect: function(ctx, x, y, width, height, radius, fill, stroke) {
 
       if (typeof stroke == "undefined" ) {
@@ -101,7 +107,8 @@ var scrollPad = {
       $('html,body').animate({ scrollLeft: ((pos.x - (v.width  / 2)) * scroll.x) }, 0);
   },
 
-  scrollpad: function(canvas, pos) {
+  scrollpad: function(canvas, evt) {
+      var pos = this.getMousePos(canvas, evt);
       var vsize = this.getViewSize();
       var x = pos.x;
       var y = pos.y;
@@ -139,43 +146,36 @@ var scrollPad = {
 
 $(document).ready(function() {
     var canvas = document.getElementById('scrollpad');
-    var mousemove = 0;
-    var mousedown = 0
-
-    canvas.addEventListener('mousemove', function(evt) {
-
-        var pos = scrollPad.getMousePos(canvas, evt);
-
-        scrollPad.scrollpad(canvas, pos);
-
-        //var message = 'Mouse position: ' + pos.x + ',' + pos.y;
-
-    }, false);
 
     canvas.addEventListener('click', function(evt) {
-
         var pos = scrollPad.getMousePos(canvas, evt);
-
     }, false);
 
 
-    canvas.addEventListener("mousedown", function(){
-        mousedown = 1;
+    canvas.addEventListener("mousedown", function() {
+        scrollPad.mousedown = true;
     }, false);
 
-    canvas.addEventListener("mousemove", function(){
-        if (mousedown == 1) {
-            mousemove = 1;
+    canvas.addEventListener("mousemove", function(evt) {
+
+        if (scrollPad.mousedown) {
+            scrollPad.mousemove = true;
+            //adjustCanvas();
+            console.log("drag");
+        }
+
+        if(scrollPad.scroll) {
+            scrollPad.scrollpad(canvas, evt);
         }
     }, false);
 
-    canvas.addEventListener("mouseup", function(){
-        mousedown = 0;
-        if(mousedown == 0 && mousemove == 0 )
-            console.log("click");
+    canvas.addEventListener("mouseup", function(evt) {
+
+        scrollPad.mousedown = false;
+        if(!scrollPad.mousedown && !scrollPad.mousemove) {
+            scrollPad.scroll = !scrollPad.scroll;
+            scrollPad.scrollpad(canvas, evt);
+        }
     }, false);
 
 });
-
-
-
