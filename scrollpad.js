@@ -147,13 +147,22 @@ var scrollPad = {
         canvas.id     = "scrollpad";
         canvas.width  = 100;
         canvas.height = 100;
-        //document.body.insertBefore(canvas, document.body.firstChild);
-        $('body').append(canvas);
+        canvas.style.zIndex = 2147483648;
+        canvas.style.position = 'fixed';
+        canvas.style.background = 'black';
+        canvas.style.borderRadius = '5px';
+        canvas.style.overflow = 'hidden';
+        canvas.style.opacity = 0.2;
+        canvas.style.top = '20px';
+        canvas.style.right = '150px';
+        canvas.style.margin = '0px 0px 0px 0px';
+        document.body.insertBefore(canvas, document.body.firstChild);
+        //$('body').append(canvas);
         canvas.style.top = 10;
     }
 }
 
-$(document).ready(function() {
+function main() {
     scrollPad.loadCanvas();
     var canvas = document.getElementById('scrollpad');
 
@@ -194,5 +203,6 @@ $(document).ready(function() {
         }
         scrollPad.mousemove = false;
     }, false);
+}
 
-});
+main();

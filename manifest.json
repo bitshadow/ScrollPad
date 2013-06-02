@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "content_scripts": [ { 
+      "js": [ "jquery.js", "scrollpad.js"],
+      "matches": [ "\u003Call_urls\u003E" ]
+  } ],
+  "name": "scrollPad",
+  "version": "1.0",
+  "description": "Scroll long webpages easy way",
+  "browser_action": {
+    "default_icon": "scrollPad.png"
+  }
+}
