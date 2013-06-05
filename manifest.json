@@ -4,10 +4,10 @@
       "js": [ "jquery.js", "scrollpad.js"],
       "matches": [ "\u003Call_urls\u003E" ]
   } ],
-  "name": "scrollPad",
+  "name": "ScrollPad",
   "version": "1.0",
   "description": "Scroll long webpages easy way",
-  "browser_action": {
-    "default_icon": "scrollPad.png"
+  "icons": {
+    "128": "128.png"
   }
 }

@@ -46,8 +46,8 @@ var scrollPad = {
 
       var size = {
 
-          width: window.innerWidth || document.body.clientWidth,
-          height: window.innerHeight || document.body.clientHeight
+          width : $(window).width(),
+          height : $(window).height()
       }
 
       return size;
@@ -60,8 +60,8 @@ var scrollPad = {
 
       var size = {
 
-          width: parseInt(w),
-          height: parseInt(h)
+          width: document.width,
+          height: document.height
       }
 
       return size;
@@ -71,13 +71,14 @@ var scrollPad = {
 
       var clsize = this.clientSize();
       var bsize = this.bodySize();
+      //canvas height and width = 75
       var w = (clsize.width * 75) / parseInt(bsize.width);
       var h = (clsize.height * 75) / parseInt(bsize.height);
 
       var size = {
 
-          width: parseInt(w),
-          height: parseInt(h)
+          width: parseInt(w)<2 ? 2: parseInt(w),
+          height: parseInt(h) < 2 ? 2: parseInt(h)
       }
 
       return size;
@@ -98,8 +99,8 @@ var scrollPad = {
       var b = this.bodySize();
 
       var scroll = {
-          x: b.width / (c.width-v.width),
-          y: b.height / (c.height-v.height)
+          x: b.width / c.width,
+          y: b.height / c.height
       };
 
       $('html,body').animate({ scrollTop: ((pos.y - (v.height / 2)) * scroll.y) }, 0);
@@ -145,19 +146,21 @@ var scrollPad = {
   loadCanvas: function() {
         var canvas = document.createElement('canvas');
         canvas.id     = "scrollpad";
-        canvas.width  = 100;
-        canvas.height = 100;
+        canvas.width  = 75;
+        canvas.height = 75;
         canvas.style.zIndex = 2147483648;
         canvas.style.position = 'fixed';
         canvas.style.background = 'black';
         canvas.style.borderRadius = '5px';
         canvas.style.overflow = 'hidden';
-        canvas.style.opacity = 0.2;
-        canvas.style.top = '20px';
-        canvas.style.right = '150px';
+        canvas.style.opacity = 0.4;
+        canvas.style.top = '100px';
+        canvas.style.right = '20px';
         canvas.style.margin = '0px 0px 0px 0px';
+        //canvas.style.border= 'rgba(82, 168, 236, 0.8) 4px';
+        canvas.style.WebkitBoxShadow = '0 0 8px 4px rgba(82, 168, 236, 0.6)'
+
         document.body.insertBefore(canvas, document.body.firstChild);
-        //$('body').append(canvas);
         canvas.style.top = 10;
     }
 }
@@ -183,7 +186,6 @@ function main() {
             console.log("drag");
             scrollPad.scroll = false;
         }
-
         if(scrollPad.scroll) {
             scrollPad.scrollpad(canvas, evt);
         }
@@ -203,6 +205,17 @@ function main() {
         }
         scrollPad.mousemove = false;
     }, false);
+
+    /*$(window).scroll(function (evt) {
+     //TODO backword scrolling needs to be added
+    });*/
 }
 
-main();
+function loadscrollPad() {
+  var b = scrollPad.bodySize()
+  var c = scrollPad.clientSize()
+  if (b.width > c.width || b.height > c.height)
+      main();
+}
+
+loadscrollPad()
