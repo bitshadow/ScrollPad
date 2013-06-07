@@ -50,6 +50,7 @@ var scrollPad = {
           height : $(window).height()
       }
 
+      console.log("client size: "+ size.width + " , " + size.height);
       return size;
   },
 
@@ -63,17 +64,17 @@ var scrollPad = {
           width: document.width,
           height: document.height
       }
+      console.log("body size: "+ size.width + " , " + size.height);
 
       return size;
   },
 
-  getViewSize: function() {
+  getViewSize: function(canvas) {
 
       var clsize = this.clientSize();
       var bsize = this.bodySize();
-      //canvas height and width = 75
-      var w = (clsize.width * 75) / parseInt(bsize.width);
-      var h = (clsize.height * 75) / parseInt(bsize.height);
+      var w = (clsize.width * canvas.width) / parseInt(bsize.width);
+      var h = (clsize.height * canvas.height) / parseInt(bsize.height);
 
       var size = {
 
@@ -81,12 +82,13 @@ var scrollPad = {
           height: parseInt(h) < 2 ? 2: parseInt(h)
       }
 
+      console.log("view size: "+ size.width + " , " + size.height + " canvas size:  "+ canvas.width + " , "+ canvas.height);
       return size;
   },
 
   draw: function(canvas, x, y) {
       var context = canvas.getContext('2d');
-      var vsize = this.getViewSize();
+      var vsize = this.getViewSize(canvas);
 
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillStyle = "white";
@@ -95,7 +97,7 @@ var scrollPad = {
 
   //position in canvas
   scrollPage: function(c, pos) {
-      var v = this.getViewSize();
+      var v = this.getViewSize(c);
       var b = this.bodySize();
 
       var scroll = {
@@ -109,7 +111,7 @@ var scrollPad = {
 
   scrollpad: function(canvas, evt) {
       var pos = this.getMousePos(canvas, evt);
-      var vsize = this.getViewSize();
+      var vsize = this.getViewSize(canvas);
       var x = pos.x;
       var y = pos.y;
 
@@ -146,8 +148,8 @@ var scrollPad = {
   loadCanvas: function() {
         var canvas = document.createElement('canvas');
         canvas.id     = "scrollpad";
-        canvas.width  = 75;
-        canvas.height = 75;
+        canvas.setAttribute('width', 75);
+        canvas.setAttribute('height', 75);
         canvas.style.zIndex = 2147483648;
         canvas.style.position = 'fixed';
         canvas.style.background = 'black';
@@ -162,6 +164,16 @@ var scrollPad = {
 
         document.body.insertBefore(canvas, document.body.firstChild);
         canvas.style.top = 10;
+    },
+
+    clearCanvas: function(canvas) {
+        var context = canvas.getContext('2d');
+
+        context.save();
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        // Will always clear the right space
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.restore();
     }
 }
 
@@ -190,6 +202,10 @@ function main() {
             scrollPad.scrollpad(canvas, evt);
         }
     }, false);
+
+    canvas.addEventListener("mouseout", function(evt){
+        scrollPad.clearCanvas(canvas);
+    });
 
     canvas.addEventListener("mouseup", function(evt) {
 
