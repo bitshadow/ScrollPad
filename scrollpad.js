@@ -56,9 +56,6 @@ var scrollPad = {
 
   bodySize: function() {
 
-      var w = window.getComputedStyle(document.body,null).getPropertyValue("width");
-      var h = window.getComputedStyle(document.body,null).getPropertyValue("height")
-
       var size = {
 
           width: document.width,
