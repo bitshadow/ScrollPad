@@ -30,6 +30,7 @@ function(x, y, width, height, radius, fill, stroke) {
     }
 }
 
+
 var scrollPad = {
 
   curx: 0,
@@ -66,7 +67,7 @@ var scrollPad = {
       return size;
   },
 
-  getViewSize: function(canvas) {
+  viewSize: function(canvas) {
 
       var clsize = this.clientSize();
       var bsize = this.bodySize();
@@ -83,9 +84,9 @@ var scrollPad = {
       return size;
   },
 
-  draw: function(canvas, x, y) {
+  drawView: function(canvas, x, y) {
       var context = canvas.getContext('2d');
-      var vsize = this.getViewSize(canvas);
+      var vsize = this.viewSize(canvas);
 
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillStyle = "white";
@@ -94,7 +95,7 @@ var scrollPad = {
 
   //position in canvas
   scrollPage: function(c, pos) {
-      var v = this.getViewSize(c);
+      var v = this.viewSize(c);
       var b = this.bodySize();
 
       var scroll = {
@@ -106,9 +107,9 @@ var scrollPad = {
       $('html,body').animate({ scrollLeft: ((pos.x - (v.width  / 2)) * scroll.x) }, 0);
   },
 
-  scrollpad: function(canvas, evt) {
+  scrollView: function(canvas, evt) {
       var pos = this.getMousePos(canvas, evt);
-      var vsize = this.getViewSize(canvas);
+      var vsize = this.viewSize(canvas);
       var x = pos.x;
       var y = pos.y;
 
@@ -128,7 +129,7 @@ var scrollPad = {
           y = canvas.height - vsize.height/2;
       }
 
-      this.draw(canvas, x, y);
+      this.drawView(canvas, x, y);
       this.scrollPage(canvas, pos);
   },
 
@@ -165,70 +166,54 @@ var scrollPad = {
 
     clearCanvas: function(canvas) {
         var context = canvas.getContext('2d');
-
         context.save();
         context.setTransform(1, 0, 0, 1, 0, 0);
-        // Will always clear the right space
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.restore();
+    },
+
+    applyStyles: function(canvas) {
+      if(this.scroll)
+        canvas.style.opacity = 0.4;
+      else
+        canvas.style.opacity = 0.1;
+    },
+
+    loadscrollPad: function() {
+        this.loadCanvas();
+        var canvas = document.getElementById('scrollpad');
+
+        canvas.addEventListener('click', function(evt) {
+            scrollPad.scroll = !scrollPad.scroll;
+            scrollPad.applyStyles(canvas);
+            scrollPad.scrollView(canvas, evt);
+        }, false);
+
+        canvas.addEventListener("mousedown", function() {
+            scrollPad.mousedown = true;
+        }, false);
+
+        canvas.addEventListener("mousemove", function(evt) {
+            if(scrollPad.scroll) {
+                scrollPad.scrollView(canvas, evt);
+            }
+        }, false);
+
+        canvas.addEventListener("mouseout", function(evt){
+            scrollPad.clearCanvas(canvas);
+        });
+
+        //TODO: add drag event functionalities
+        //TODO: add reverse mapping from page to canvas.
     }
 }
 
-function loadscrollPad() {
-    scrollPad.loadCanvas();
-    var canvas = document.getElementById('scrollpad');
-
-    canvas.addEventListener('click', function(evt) {
-        var pos = scrollPad.getMousePos(canvas, evt);
-    }, false);
-
-
-    canvas.addEventListener("mousedown", function() {
-        scrollPad.mousedown = true;
-    }, false);
-
-    canvas.addEventListener("mousemove", function(evt) {
-        //drag
-        if (scrollPad.mousedown) {
-            scrollPad.mousemove = true;
-            //adjustCanvas(canvas, evt);
-            console.log("drag");
-            scrollPad.scroll = false;
-        }
-        if(scrollPad.scroll) {
-            scrollPad.scrollpad(canvas, evt);
-        }
-    }, false);
-
-    canvas.addEventListener("mouseout", function(evt){
-        scrollPad.clearCanvas(canvas);
-    });
-
-    canvas.addEventListener("mouseup", function(evt) {
-
-        scrollPad.mousedown = false;
-        //click
-        if(!scrollPad.mousedown && !scrollPad.mousemove) {
-            scrollPad.scroll = !scrollPad.scroll;
-            if(scrollPad.scroll)
-               canvas.style.opacity = 0.4
-            else
-               canvas.style.opacity = 0.1
-            scrollPad.scrollpad(canvas, evt);
-        }
-        scrollPad.mousemove = false;
-    }, false);
-
-    /*$(window).scroll(function (evt) {
-     //TODO backword scrolling needs to be added
-    });*/
-}
-
 function main() {
-  var b = scrollPad.bodySize()
-  var c = scrollPad.clientSize()
-  if (b.width > c.width || b.height > c.height)
-      loadscrollPad();
+  var b = scrollPad.bodySize();
+  var c = scrollPad.clientSize();
+  if (b.width > c.width || b.height > c.height) {
+      scrollPad.loadscrollPad();
+  }
 }
 
 main()
