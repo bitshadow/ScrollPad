@@ -1,14 +1,30 @@
+Object.extend = function(dest, src) {
+    //alert("Copying properties of " + src + " to " + dest);
+    for(property in src)
+        dest[property] = src[property];
+    return dest;
+};
+
+
+Class = { 
+    create:function() {
+        return function() {
+            this.initialize.apply(this, arguments);
+        }
+    }
+};
+
 Object.getPrototypeOf(document.createElement('canvas').getContext('2d')).roundRect=
 function(x, y, width, height, radius, fill, stroke) {
-    
+
     if (typeof stroke == "undefined" ) {
-    stroke = true;
+        stroke = true;
     }
-    
+
     if (typeof radius === "undefined") {
-    radius = 5;
+        radius = 5;
     }
-    
+
     this.beginPath();
     this.moveTo(x + radius, y);
     this.lineTo(x + width - radius, y);
@@ -20,26 +36,24 @@ function(x, y, width, height, radius, fill, stroke) {
     this.lineTo(x, y + radius);
     this.quadraticCurveTo(x, y, x + radius, y);
     this.closePath();
-    
+
     if (stroke) {
-    this.stroke();
+        this.stroke();
     }
-    
+
     if (fill) {
-    this.fill();
+        this.fill();
     }
 }
 
+var scrollPad = Class.create();
+Object.extend(scrollPad.prototype, {
 
-var scrollPad = {
+  canvas: null,
 
   curx: 0,
 
   cury: 0,
-
-  mousemove: false,
-
-  mousedown: false,
 
   scroll: true,
 
@@ -67,12 +81,12 @@ var scrollPad = {
       return size;
   },
 
-  viewSize: function(canvas) {
+  viewSize: function() {
 
       var clsize = this.clientSize();
       var bsize = this.bodySize();
-      var w = (clsize.width * canvas.width) / parseInt(bsize.width);
-      var h = (clsize.height * canvas.height) / parseInt(bsize.height);
+      var w = (clsize.width * this.canvas.width) / parseInt(bsize.width);
+      var h = (clsize.height * this.canvas.height) / parseInt(bsize.height);
 
       var size = {
 
@@ -80,36 +94,36 @@ var scrollPad = {
           height: parseInt(h) < 2 ? 2: parseInt(h)
       }
 
-      console.log("view size: "+ size.width + " , " + size.height + " canvas size:  "+ canvas.width + " , "+ canvas.height);
+      console.log("view size: "+ size.width + " , " + size.height + " canvas size:  "+ this.canvas.width + " , "+ this.canvas.height);
       return size;
   },
 
-  drawView: function(canvas, x, y) {
-      var context = canvas.getContext('2d');
-      var vsize = this.viewSize(canvas);
+  drawView: function(x, y) {
+      var context = this.canvas.getContext('2d');
+      var vsize = this.viewSize();
 
-      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       context.fillStyle = "white";
       context.roundRect(x-(vsize.width/2), y-(vsize.height/2), vsize.width, vsize.height, 2, true, false);
   },
 
   //position in canvas
-  scrollPage: function(c, pos) {
-      var v = this.viewSize(c);
+  scrollPage: function(pos) {
+      var v = this.viewSize();
       var b = this.bodySize();
 
       var scroll = {
-          x: b.width / c.width,
-          y: b.height / c.height
+          x: b.width / this.canvas.width,
+          y: b.height / this.canvas.height
       };
 
       $('html,body').animate({ scrollTop: ((pos.y - (v.height / 2)) * scroll.y) }, 0);
       $('html,body').animate({ scrollLeft: ((pos.x - (v.width  / 2)) * scroll.x) }, 0);
   },
 
-  scrollView: function(canvas, evt) {
-      var pos = this.getMousePos(canvas, evt);
-      var vsize = this.viewSize(canvas);
+  scrollView: function(evt) {
+      var pos = this.getMousePos(evt);
+      var vsize = this.viewSize();
       var x = pos.x;
       var y = pos.y;
 
@@ -117,25 +131,25 @@ var scrollPad = {
           x = vsize.width/2;
       }
 
-      if ((pos.x + (vsize.width/2)) >= canvas.width) {
-          x = canvas.width - vsize.width/2;
+      if ((pos.x + (vsize.width/2)) >= this.canvas.width) {
+          x = this.canvas.width - vsize.width/2;
       }
 
       if ((pos.y - (vsize.height/2)) <= 0 ) {
           y = vsize.height/2;
       }
 
-      if ((pos.y + (vsize.height/2)) >= canvas.height) {
-          y = canvas.height - vsize.height/2;
+      if ((pos.y + (vsize.height/2)) >= this.canvas.height) {
+          y = this.canvas.height - vsize.height/2;
       }
 
-      this.drawView(canvas, x, y);
-      this.scrollPage(canvas, pos);
+      this.drawView(x, y);
+      this.scrollPage(pos);
   },
 
-  getMousePos: function(canvas, evt) {
+  getMousePos: function(evt) {
 
-      var rect = canvas.getBoundingClientRect();
+      var rect = this.canvas.getBoundingClientRect();
 
       return {
           x: evt.clientX - rect.left,
@@ -164,56 +178,54 @@ var scrollPad = {
         canvas.style.top = 10;
     },
 
-    clearCanvas: function(canvas) {
-        var context = canvas.getContext('2d');
+    clearCanvas: function() {
+        var context = this.canvas.getContext('2d');
         context.save();
         context.setTransform(1, 0, 0, 1, 0, 0);
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         context.restore();
     },
 
-    applyStyles: function(canvas) {
+    applyStyles: function() {
       if(this.scroll)
-        canvas.style.opacity = 0.4;
+        this.canvas.style.opacity = 0.4;
       else
-        canvas.style.opacity = 0.1;
+        this.canvas.style.opacity = 0.1;
     },
 
-    loadscrollPad: function() {
-        this.loadCanvas();
-        var canvas = document.getElementById('scrollpad');
-
-        canvas.addEventListener('click', function(evt) {
-            scrollPad.scroll = !scrollPad.scroll;
-            scrollPad.applyStyles(canvas);
-            scrollPad.scrollView(canvas, evt);
+    initialize: function() {
+        var self = this;
+        self.loadCanvas();
+        self.canvas = document.getElementById('scrollpad');
+        self.canvas.addEventListener('click', function(evt) {
+            self.scroll = !self.scroll;
+            self.applyStyles();
+            self.scrollView(evt);
         }, false);
 
-        canvas.addEventListener("mousedown", function() {
-            scrollPad.mousedown = true;
-        }, false);
-
-        canvas.addEventListener("mousemove", function(evt) {
-            if(scrollPad.scroll) {
-                scrollPad.scrollView(canvas, evt);
+        self.canvas.addEventListener("mousemove", function(evt) {
+            if(self.scroll) {
+                self.scrollView(evt);
             }
         }, false);
 
-        canvas.addEventListener("mouseout", function(evt){
-            scrollPad.clearCanvas(canvas);
+        self.canvas.addEventListener("mouseout", function(evt){
+            self.clearCanvas();
         });
 
         //TODO: add drag event functionalities
         //TODO: add reverse mapping from page to canvas.
     }
-}
+});
+
+s = null;
 
 function main() {
-  var b = scrollPad.bodySize();
-  var c = scrollPad.clientSize();
-  if (b.width > c.width || b.height > c.height) {
-      scrollPad.loadscrollPad();
-  }
+    //var b = scrollPad.bodySize();
+    //var c = scrollPad.clientSize();
+    //if (b.width > c.width || b.height > c.height) {
+        s = new scrollPad();
+    //}
 }
 
 main()
