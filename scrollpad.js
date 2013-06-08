@@ -1,3 +1,34 @@
+Object.getPrototypeOf(document.createElement('canvas').getContext('2d')).roundRect=
+function(x, y, width, height, radius, fill, stroke) {
+    
+    if (typeof stroke == "undefined" ) {
+    stroke = true;
+    }
+    
+    if (typeof radius === "undefined") {
+    radius = 5;
+    }
+    
+    this.beginPath();
+    this.moveTo(x + radius, y);
+    this.lineTo(x + width - radius, y);
+    this.quadraticCurveTo(x + width, y, x + width, y + radius);
+    this.lineTo(x + width, y + height - radius);
+    this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    this.lineTo(x + radius, y + height);
+    this.quadraticCurveTo(x, y + height, x, y + height - radius);
+    this.lineTo(x, y + radius);
+    this.quadraticCurveTo(x, y, x + radius, y);
+    this.closePath();
+    
+    if (stroke) {
+    this.stroke();
+    }
+    
+    if (fill) {
+    this.fill();
+    }
+}
 
 var scrollPad = {
 
@@ -10,37 +41,6 @@ var scrollPad = {
   mousedown: false,
 
   scroll: true,
-
-  roundRect: function(ctx, x, y, width, height, radius, fill, stroke) {
-
-      if (typeof stroke == "undefined" ) {
-          stroke = true;
-      }
-
-      if (typeof radius === "undefined") {
-          radius = 5;
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-
-      if (stroke) {
-          ctx.stroke();
-      }
-
-      if (fill) {
-          ctx.fill();
-      }
-  },
 
   clientSize: function() {
 
@@ -89,7 +89,7 @@ var scrollPad = {
 
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillStyle = "white";
-      this.roundRect(context,x-(vsize.width/2), y-(vsize.height/2), vsize.width, vsize.height, 2, true, false);
+      context.roundRect(x-(vsize.width/2), y-(vsize.height/2), vsize.width, vsize.height, 2, true, false);
   },
 
   //position in canvas
@@ -174,7 +174,7 @@ var scrollPad = {
     }
 }
 
-function main() {
+function loadscrollPad() {
     scrollPad.loadCanvas();
     var canvas = document.getElementById('scrollpad');
 
@@ -224,11 +224,11 @@ function main() {
     });*/
 }
 
-function loadscrollPad() {
+function main() {
   var b = scrollPad.bodySize()
   var c = scrollPad.clientSize()
   if (b.width > c.width || b.height > c.height)
-      main();
+      loadscrollPad();
 }
 
-loadscrollPad()
+main()
