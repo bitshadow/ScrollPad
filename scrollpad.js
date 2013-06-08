@@ -60,23 +60,19 @@ Object.extend(scrollPad.prototype, {
   clientSize: function() {
 
       var size = {
-
           width : $(window).width(),
           height : $(window).height()
       }
 
-      console.log("client size: "+ size.width + " , " + size.height);
       return size;
   },
 
   bodySize: function() {
 
       var size = {
-
           width: document.width,
           height: document.height
       }
-      console.log("body size: "+ size.width + " , " + size.height);
 
       return size;
   },
@@ -94,7 +90,6 @@ Object.extend(scrollPad.prototype, {
           height: parseInt(h) < 2 ? 2: parseInt(h)
       }
 
-      console.log("view size: "+ size.width + " , " + size.height + " canvas size:  "+ this.canvas.width + " , "+ this.canvas.height);
       return size;
   },
 
@@ -189,11 +184,12 @@ Object.extend(scrollPad.prototype, {
     applyStyles: function() {
       if(this.scroll)
         this.canvas.style.opacity = 0.4;
-      else
+      else {
         this.canvas.style.opacity = 0.1;
+      }
     },
 
-    initialize: function() {
+    loadScrollPad: function() {
         var self = this;
         self.loadCanvas();
         self.canvas = document.getElementById('scrollpad');
@@ -215,17 +211,20 @@ Object.extend(scrollPad.prototype, {
 
         //TODO: add drag event functionalities
         //TODO: add reverse mapping from page to canvas.
+    },
+
+    initialize: function() {
+        var b = this.bodySize();
+        var c = this.clientSize();
+        if (b.width > c.width || b.height > c.height) {
+            this.loadScrollPad();
+        }
+
     }
 });
 
 s = null;
 
-function main() {
-    //var b = scrollPad.bodySize();
-    //var c = scrollPad.clientSize();
-    //if (b.width > c.width || b.height > c.height) {
-        s = new scrollPad();
-    //}
+window.onload = function() {
+    s = new scrollPad();
 }
-
-main()
