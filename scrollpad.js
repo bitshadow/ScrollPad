@@ -152,7 +152,7 @@ Object.extend(scrollPad.prototype, {
       };
   },
 
-  loadCanvas: function() {
+  createCanvas: function() {
         var canvas = document.createElement('canvas');
         canvas.id     = "scrollpad";
         canvas.setAttribute('width', 75);
@@ -191,7 +191,7 @@ Object.extend(scrollPad.prototype, {
 
     loadScrollPad: function() {
         var self = this;
-        self.loadCanvas();
+        self.createCanvas();
         self.canvas = document.getElementById('scrollpad');
         self.canvas.addEventListener('click', function(evt) {
             self.scroll = !self.scroll;
