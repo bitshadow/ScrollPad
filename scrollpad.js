@@ -57,7 +57,7 @@ Object.extend(scrollPad.prototype, {
 
   scroll: true,
 
-  clientSize: function() {
+  viewPort: function() {
 
       var size = {
           width : $(window).width(),
@@ -79,7 +79,7 @@ Object.extend(scrollPad.prototype, {
 
   viewSize: function() {
 
-      var clsize = this.clientSize();
+      var clsize = this.viewPort();
       var bsize = this.bodySize();
       var w = (clsize.width * this.canvas.width) / parseInt(bsize.width);
       var h = (clsize.height * this.canvas.height) / parseInt(bsize.height);
@@ -215,7 +215,7 @@ Object.extend(scrollPad.prototype, {
 
     initialize: function() {
         var b = this.bodySize();
-        var c = this.clientSize();
+        var c = this.viewPort();
         if (b.width > c.width || b.height > c.height) {
             this.loadScrollPad();
         }
