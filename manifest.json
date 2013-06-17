@@ -4,6 +4,7 @@
       "js": [ "jquery.js", "scrollpad.js"],
       "matches": [ "\u003Call_urls\u003E" ]
   } ],
+  "background": { "scripts": ["background.js"] },
   "name": "ScrollPad",
   "version": "1.0",
   "description": "Scroll long webpages easy way",
