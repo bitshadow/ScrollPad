@@ -5,6 +5,7 @@
       "matches": [ "\u003Call_urls\u003E" ]
   } ],
   "background": { "scripts": ["background.js"] },
+  "options_page": "options.html",
   "name": "ScrollPad",
   "version": "1.0",
   "description": "Scroll long webpages easy way",

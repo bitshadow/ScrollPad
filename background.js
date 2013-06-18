@@ -25,4 +25,9 @@ chrome.runtime.onMessage.addListener (
 		
 		if(request.method == "getColour")
 			sendResponse({ value : localStorage.getItem(request.key)});
+			
+		if(request.method == "resetDefaults") {
+			resetDefaults();
+			sendResponse({reset : true});
+		}		
 	});
