@@ -1,10 +1,9 @@
-var _startX = 0;            // mouse starting positions
-var _startY = 0;
-var _offsetX = 0;           // current element offset
-var _offsetY = 0;
-var _dragElement;           // needs to be passed from OnMouseDown to OnMouseMove
-var _oldZIndex = 0;         // we temporarily increase the z-index during drag
-var _drag = false;
+var SPStartX = 0;            // mouse starting positions
+var SPStartY = 0;
+var SPOffsetX = 0;           // current element offset
+var SPOffsetY = 0;
+var SPDragElement;           // needs to be passed from OnMouseDown to OnMouseMove
+var SPOldZIndex = 0;         // we temporarily increase the z-index during drag
 
 function OnMouseDown(e)
 {
@@ -15,19 +14,19 @@ function OnMouseDown(e)
         e.button == 0) && target.id == 'scrollpad')
     {
         // grab the mouse position
-        _startX = e.clientX;
-        _startY = e.clientY;
+        SPStartX = e.clientX;
+        SPStartY = e.clientY;
 
         // grab the clicked element's position
-        _offsetX = ExtractNumber(target.style.left);
-        _offsetY = ExtractNumber(target.style.top);
+        SPOffsetX = ExtractNumber(target.style.left);
+        SPOffsetY = ExtractNumber(target.style.top);
 
         // bring the clicked element to the front while it is being dragged
-        _oldZIndex = target.style.zIndex;
+        SPOldZIndex = target.style.zIndex;
         target.style.zIndex = 10000;
 
         // we need to access the element in OnMouseMove
-        _dragElement = target;
+        SPDragElement = target;
 
         // tell our code to start moving the element with the mouse
         document.onmousemove = OnMouseMove;
@@ -35,12 +34,9 @@ function OnMouseDown(e)
         // cancel out any text selections
         document.body.focus();
 
-        // prevent text selection in IE
         document.onselectstart = function () { return false; };
-        // prevent IE from trying to drag an image
         target.ondragstart = function() { return false; };
 
-        // prevent text selection (except IE)
         return false;
     }
 }
@@ -53,22 +49,21 @@ function OnMouseMove(e)
         s.setDrag(true);
 
     // this is the actual "drag code"
-    _dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
-    _dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
+    SPDragElement.style.left = (SPOffsetX + e.clientX - SPStartX) + 'px';
+    SPDragElement.style.top = (SPOffsetY + e.clientY - SPStartY) + 'px';
 }
 
 function OnMouseUp(e)
 {
-    if (_dragElement != null)
+    if (SPDragElement != null)
     {
-        _dragElement.style.zIndex = _oldZIndex;
+        SPDragElement.style.zIndex = SPOldZIndex;
         // we're done with these events until the next OnMouseDown
         document.onmousemove = null;
         document.onselectstart = null;
-        _dragElement.ondragstart = null;
+        SPDragElement.ondragstart = null;
 
-        // this is how we know we're not dragging      
-        _dragElement = null;
+        SPDragElement = null;
     }
 }
 
