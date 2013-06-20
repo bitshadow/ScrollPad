@@ -1,6 +1,3 @@
-var l = ($(window).width() - canvas.width - 20);
-//canvas.style.left = l.toString()+ "px";
-
 var SPStartX = 0;            // mouse starting positions
 var SPStartY = 0;
 var SPOffsetX = 0;           // current element offset
