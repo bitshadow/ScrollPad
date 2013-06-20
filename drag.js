@@ -23,7 +23,7 @@ function OnMouseDown(e)
 
         // bring the clicked element to the front while it is being dragged
         SPOldZIndex = target.style.zIndex;
-        target.style.zIndex = 10000;
+        target.style.zIndex = 2147483648;
 
         // we need to access the element in OnMouseMove
         SPDragElement = target;

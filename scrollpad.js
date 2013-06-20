@@ -158,7 +158,7 @@ Object.extend(scrollPad.prototype, {
 
   createCanvas: function() {
         var canvas = document.createElement('canvas');
-        canvas.id     = "scrollpad";
+        canvas.id = "scrollpad";
         canvas.setAttribute('width', 75);
         canvas.setAttribute('height', 75);
         canvas.style.zIndex = 2147483648;
@@ -168,7 +168,8 @@ Object.extend(scrollPad.prototype, {
         canvas.style.overflow = 'hidden';
         canvas.style.opacity = 0.4;
         canvas.style.top = '100px';
-        canvas.style.left = '20px';
+        var l = ($(window).width() - canvas.width - 20);
+        canvas.style.left = l.toString()+ "px";
         canvas.style.margin = '0px 0px 0px 0px';
         //canvas.style.border= 'rgba(82, 168, 236, 0.8) 4px';
         canvas.style.WebkitBoxShadow = '0 0 8px 4px rgba(82, 168, 236, 0.6)'
@@ -219,6 +220,7 @@ Object.extend(scrollPad.prototype, {
         });
 
         //TODO: add reverse mapping from page to canvas.
+        //TODO: fix rendering while drag
     },
 
     setDrag: function(drag) {
