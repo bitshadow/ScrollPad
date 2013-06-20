@@ -168,8 +168,7 @@ Object.extend(scrollPad.prototype, {
         canvas.style.overflow = 'hidden';
         canvas.style.opacity = 0.4;
         canvas.style.top = '100px';
-        var l = ($(window).width() - canvas.width - 20);
-        canvas.style.left = l.toString()+ "px";
+        canvas.style.right = '20px';
         canvas.style.margin = '0px 0px 0px 0px';
         //canvas.style.border= 'rgba(82, 168, 236, 0.8) 4px';
         canvas.style.WebkitBoxShadow = '0 0 8px 4px rgba(82, 168, 236, 0.6)'

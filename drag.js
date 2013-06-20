@@ -1,3 +1,6 @@
+var l = ($(window).width() - canvas.width - 20);
+//canvas.style.left = l.toString()+ "px";
+
 var SPStartX = 0;            // mouse starting positions
 var SPStartY = 0;
 var SPOffsetX = 0;           // current element offset
@@ -18,7 +21,7 @@ function OnMouseDown(e)
         SPStartY = e.clientY;
 
         // grab the clicked element's position
-        SPOffsetX = ExtractNumber(target.style.left);
+        SPOffsetX = ExtractNumber(target.style.right);
         SPOffsetY = ExtractNumber(target.style.top);
 
         // bring the clicked element to the front while it is being dragged
@@ -49,7 +52,7 @@ function OnMouseMove(e)
         s.setDrag(true);
 
     // this is the actual "drag code"
-    SPDragElement.style.left = (SPOffsetX + e.clientX - SPStartX) + 'px';
+    SPDragElement.style.right =  (SPOffsetX + SPStartX - e.clientX) + 'px';
     SPDragElement.style.top = (SPOffsetY + e.clientY - SPStartY) + 'px';
 }
 
