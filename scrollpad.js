@@ -1,3 +1,5 @@
+s = null;
+
 Object.extend = function(dest, src) {
     //alert("Copying properties of " + src + " to " + dest);
     for(property in src)
@@ -55,7 +57,9 @@ Object.extend(scrollPad.prototype, {
 
   cury: 0,
 
-  scroll: true,
+  scrollEnable: true,
+
+  drag: false,
 
   viewPort: function() {
 
@@ -164,7 +168,7 @@ Object.extend(scrollPad.prototype, {
         canvas.style.overflow = 'hidden';
         canvas.style.opacity = 0.4;
         canvas.style.top = '100px';
-        canvas.style.right = '20px';
+        canvas.style.left = '20px';
         canvas.style.margin = '0px 0px 0px 0px';
         //canvas.style.border= 'rgba(82, 168, 236, 0.8) 4px';
         canvas.style.WebkitBoxShadow = '0 0 8px 4px rgba(82, 168, 236, 0.6)'
@@ -182,7 +186,7 @@ Object.extend(scrollPad.prototype, {
     },
 
     applyStyles: function() {
-      if(this.scroll)
+      if(this.scrollEnable)
         this.canvas.style.opacity = 0.4;
       else {
         this.canvas.style.opacity = 0.1;
@@ -193,14 +197,19 @@ Object.extend(scrollPad.prototype, {
         var self = this;
         self.createCanvas();
         self.canvas = document.getElementById('scrollpad');
-        self.canvas.addEventListener('click', function(evt) {
-            self.scroll = !self.scroll;
-            self.applyStyles();
-            self.scrollView(evt);
+
+        self.canvas.addEventListener('mouseup', function(evt) {
+            //setDrag called from drag.js
+            if(!self.drag) {
+                self.scrollEnable = !self.scrollEnable;
+                self.applyStyles();
+                self.scrollView(evt);
+            }
+            self.drag = false;
         }, false);
 
         self.canvas.addEventListener("mousemove", function(evt) {
-            if(self.scroll) {
+            if(self.scrollEnable && !self.drag) {
                 self.scrollView(evt);
             }
         }, false);
@@ -209,8 +218,11 @@ Object.extend(scrollPad.prototype, {
             self.clearCanvas();
         });
 
-        //TODO: add drag event functionalities
         //TODO: add reverse mapping from page to canvas.
+    },
+
+    setDrag: function(drag) {
+        this.drag = true;
     },
 
     initialize: function() {
@@ -223,8 +235,7 @@ Object.extend(scrollPad.prototype, {
     }
 });
 
-s = null;
-
 window.onload = function() {
     s = new scrollPad();
+    InitDragDrop();
 }
