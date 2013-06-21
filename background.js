@@ -1,4 +1,5 @@
 var defaults = {"background_colour" : "black" , "border_colour" : "rgba(82, 168, 236, 0.6)" , "inner_colour" : "white"};
+var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime':'extension';
 
 setDefaults = function (force) {
 
@@ -17,7 +18,7 @@ resetDefaults = function () {
 
 setDefaults(false);
 
-chrome.runtime.onMessage.addListener ( 
+chrome[runtimeOrExtension].onMessage.addListener ( 
 
 	function (request, sender, sendResponse) {
 		

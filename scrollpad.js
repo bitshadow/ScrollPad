@@ -52,8 +52,9 @@ var Storage = Class.create();
 Storage.fetch = function(method, key) {
 
 	var value = "";
-	
-	chrome.runtime.sendMessage({ method : method, key : key}, function(response) {
+
+  var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime':'extension';
+	chrome[runtimeOrExtension].sendMessage({ method : method, key : key}, function(response) {
 		console.log(response);
 		s[key](response);
 	});
