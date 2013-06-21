@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "content_scripts": [ { 
-      "js": [ "jquery.js", "scrollpad.js"],
+      "js": [ "jquery.js","drag.js", "scrollpad.js"],
       "matches": [ "\u003Call_urls\u003E" ]
   } ],
   "background": { "scripts": ["background.js"] },

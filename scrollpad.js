@@ -87,7 +87,9 @@ Object.extend(scrollPad.prototype, {
 
   cury: 0,
 
-  scroll: true,
+  scrollEnable: true,
+
+  drag: false,
 
   viewPort: function() {
 
@@ -186,7 +188,7 @@ Object.extend(scrollPad.prototype, {
 
   createCanvas: function() {
         var canvas = document.createElement('canvas');
-        canvas.id     = "scrollpad";
+        canvas.id = "scrollpad";
         canvas.setAttribute('width', 75);
         canvas.setAttribute('height', 75);
         canvas.style.zIndex = 2147483648;
@@ -215,7 +217,7 @@ Object.extend(scrollPad.prototype, {
     },
 
     applyStyles: function() {
-      if(this.scroll)
+      if(this.scrollEnable)
         this.canvas.style.opacity = 0.4;
       else {
         this.canvas.style.opacity = 0.1;
@@ -241,14 +243,19 @@ Object.extend(scrollPad.prototype, {
         var self = this;
         self.createCanvas();
         self.canvas = document.getElementById('scrollpad');
-        self.canvas.addEventListener('click', function(evt) {
-            self.scroll = !self.scroll;
-            self.applyStyles();
-            self.scrollView(evt);
+
+        self.canvas.addEventListener('mouseup', function(evt) {
+            //setDrag called from drag.js
+            if(!self.drag) {
+                self.scrollEnable = !self.scrollEnable;
+                self.applyStyles();
+                self.scrollView(evt);
+            }
+            self.drag = false;
         }, false);
 
         self.canvas.addEventListener("mousemove", function(evt) {
-            if(self.scroll) {
+            if(self.scrollEnable && !self.drag) {
                 self.scrollView(evt);
             }
         }, false);
@@ -257,8 +264,12 @@ Object.extend(scrollPad.prototype, {
             self.clearCanvas();
         });
 
-        //TODO: add drag event functionalities
         //TODO: add reverse mapping from page to canvas.
+        //TODO: fix rendering while drag
+    },
+
+    setDrag: function(drag) {
+        this.drag = true;
     },
 
     initialize: function() {
@@ -271,9 +282,7 @@ Object.extend(scrollPad.prototype, {
     }
 });
 
-
-
 window.onload = function() {
-    //Storage.testFetchColour();
-	s = new scrollPad();
+    s = new scrollPad();
+    InitDragDrop();
 }
