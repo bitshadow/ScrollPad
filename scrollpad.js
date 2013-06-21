@@ -51,32 +51,12 @@ var Storage = Class.create();
 
 Storage.fetch = function(method, key) {
 
-	var value = "";
-
   var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime':'extension';
-	chrome[runtimeOrExtension].sendMessage({ method : method, key : key}, function(response) {
-		console.log(response);
-		s[key](response);
-	});
-	
-	//return value;
+  chrome[runtimeOrExtension].sendMessage({ method : method, key : key}, function(response) {
+      console.log(response);
+      s[key](response);
+  });
 }
-
-/*Storage.fetchColour = function(key) {
-	
-	var response = Storage.fetch("getColour", key + "-colour");
-	
-	console.log("response = " + response); // WONT WORK Because Message Passing is Asynchronous
-	
-	//return response.toString();
-}*/
-
-/*Storage.testFetchColour = function() {
-	
-	Storage.fetchColour("background");
-	Storage.fetchColour("border");
-	Storage.fetchColour("inner");
-}*/
 
 var scrollPad = Class.create();
 Object.extend(scrollPad.prototype, {
@@ -90,6 +70,8 @@ Object.extend(scrollPad.prototype, {
   scrollEnable: true,
 
   drag: false,
+
+  inner_colour_value: 'white',
 
   viewPort: function() {
 
@@ -193,16 +175,17 @@ Object.extend(scrollPad.prototype, {
         canvas.setAttribute('height', 75);
         canvas.style.zIndex = 2147483648;
         canvas.style.position = 'fixed';
-        Storage.fetch("getColour", "background_colour"); // set style.background 
         canvas.style.borderRadius = '5px';
         canvas.style.overflow = 'hidden';
         canvas.style.opacity = 0.4;
         canvas.style.top = '100px';
         canvas.style.right = '20px';
         canvas.style.margin = '0px 0px 0px 0px';
-        //canvas.style.border= 'rgba(82, 168, 236, 0.8) 4px';
-        Storage.fetch("getColour", "border_colour"); // set style.WebkitBoxShadow
-		Storage.fetch("getColour", "inner_colour");  // set value for context.fillStyle better to call it here as the method "drawView" is called repeatedly
+
+        //Retrieve storage data.
+        Storage.fetch("getColour", "background_colour");
+        Storage.fetch("getColour", "border_colour");
+        Storage.fetch("getColour", "inner_colour");
 
         document.body.insertBefore(canvas, document.body.firstChild);
         canvas.style.top = 10;
@@ -224,21 +207,18 @@ Object.extend(scrollPad.prototype, {
       }
     },
 
-	background_colour: function(response) {
-	
-		document.getElementById("scrollpad").style.background = response.value;
-	},
-	
-	border_colour: function(response) {
-		
-		document.getElementById("scrollpad").style.WebkitBoxShadow =  '0 0 8px 4px ' + response.value;
-	},
-	
-	inner_colour: function(response) {
-		
-		inner_colour_value = response.value;
-	},
-	
+    background_colour: function(response) {
+        this.canvas.style.background = response.value;
+    },
+
+    border_colour: function(response) {
+        this.canvas.style.WebkitBoxShadow =  '0 0 8px 4px ' + response.value;
+    },
+
+    inner_colour: function(response) {
+        inner_colour_value = response.value;
+    },
+
     loadScrollPad: function() {
         var self = this;
         self.createCanvas();
