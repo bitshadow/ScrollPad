@@ -50,10 +50,10 @@ function(x, y, width, height, radius, fill, stroke) {
 var Storage = Class.create();
 
 Storage.fetch = function(method, key) {
-
-  var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime':'extension';
-  chrome[runtimeOrExtension].sendMessage({ method : method, key : key}, function(response) {
-      console.log(response);
+  var rORe = chrome.runtime && chrome.runtime.sendMessage;
+  var runtimeOrExtension = rORe ? 'runtime':'extension';
+  chrome[runtimeOrExtension].sendMessage({ method : method, key : key }, function(response) {
+      //console.log(response);
       s[key](response);
   });
 }
@@ -61,114 +61,123 @@ Storage.fetch = function(method, key) {
 var scrollPad = Class.create();
 Object.extend(scrollPad.prototype, {
 
-  canvas: null,
+    canvas: null,
 
-  curx: 0,
+    curx: 0,
 
-  cury: 0,
+    cury: 0,
 
-  scrollEnable: true,
+    scrollEnable: true,
 
-  drag: false,
+    drag: false,
 
-  inner_colour_value: 'white',
+    innerColour: 'white',
 
-  viewPort: function() {
+    //storage data response handlers
+    background_colour: function(response) {
+        this.canvas.style.background = response.value;
+    },
 
-      var size = {
-          width : $(window).width(),
-          height : $(window).height()
-      }
+    border_colour: function(response) {
+        this.canvas.style.WebkitBoxShadow =  '0 0 8px 4px ' + response.value;
+    },
+
+    inner_colour: function(response) {
+        innerColour = response.value;
+    },
+
+    viewPort: function() {
+
+        var size = {
+            width : $(window).width(),
+            height : $(window).height()
+        }
+        return size;
+    },
+
+    bodySize: function() {
+
+        var size = {
+            width: document.width,
+            height: document.height
+        }
+      return size;
+    },
+
+    viewSize: function() {
+
+        var clsize = this.viewPort();
+        var bsize = this.bodySize();
+        var w = (clsize.width * this.canvas.width) / parseInt(bsize.width);
+        var h = (clsize.height * this.canvas.height) / parseInt(bsize.height);
+
+        var size = {
+            width: parseInt(w)<2 ? 2: parseInt(w),
+            height: parseInt(h) < 2 ? 2: parseInt(h)
+        }
 
       return size;
-  },
+    },
 
-  bodySize: function() {
+    drawView: function(x, y) {
+        var context = this.canvas.getContext('2d');
+        var vsize = this.viewSize();
 
-      var size = {
-          width: document.width,
-          height: document.height
-      }
+        context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        context.fillStyle = innerColour;
+        context.roundRect(x-(vsize.width/2), y-(vsize.height/2),
+                          vsize.width, vsize.height, 2, true, false);
+    },
 
-      return size;
-  },
+    //position in canvas
+    scrollPage: function(pos) {
+        var v = this.viewSize();
+        var b = this.bodySize();
 
-  viewSize: function() {
+        var scroll = {
+            x: b.width / this.canvas.width,
+            y: b.height / this.canvas.height
+        };
 
-      var clsize = this.viewPort();
-      var bsize = this.bodySize();
-      var w = (clsize.width * this.canvas.width) / parseInt(bsize.width);
-      var h = (clsize.height * this.canvas.height) / parseInt(bsize.height);
+        $('html,body').animate({ scrollTop: ((pos.y - (v.height / 2)) * scroll.y) }, 0);
+        $('html,body').animate({ scrollLeft: ((pos.x - (v.width  / 2)) * scroll.x) }, 0);
+    },
 
-      var size = {
+    scrollView: function(evt) {
+        var pos = this.getMousePos(evt);
+        var vsize = this.viewSize();
+        var x = pos.x;
+        var y = pos.y;
 
-          width: parseInt(w)<2 ? 2: parseInt(w),
-          height: parseInt(h) < 2 ? 2: parseInt(h)
-      }
+        if ((pos.x - (vsize.width/2)) <= 0 ) {
+            x = vsize.width/2;
+        }
 
-      return size;
-  },
+        if ((pos.x + (vsize.width/2)) >= this.canvas.width) {
+            x = this.canvas.width - vsize.width/2;
+        }
 
-  drawView: function(x, y) {
-      var context = this.canvas.getContext('2d');
-      var vsize = this.viewSize();
+        if ((pos.y - (vsize.height/2)) <= 0 ) {
+            y = vsize.height/2;
+        }
 
-      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      context.fillStyle = inner_colour_value;
-      context.roundRect(x-(vsize.width/2), y-(vsize.height/2), vsize.width, vsize.height, 2, true, false);
-  },
+        if ((pos.y + (vsize.height/2)) >= this.canvas.height) {
+            y = this.canvas.height - vsize.height/2;
+        }
 
-  //position in canvas
-  scrollPage: function(pos) {
-      var v = this.viewSize();
-      var b = this.bodySize();
+        this.drawView(x, y);
+        this.scrollPage(pos);
+    },
 
-      var scroll = {
-          x: b.width / this.canvas.width,
-          y: b.height / this.canvas.height
-      };
+    getMousePos: function(evt) {
+        var rect = this.canvas.getBoundingClientRect();
+        return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+        };
+    },
 
-      $('html,body').animate({ scrollTop: ((pos.y - (v.height / 2)) * scroll.y) }, 0);
-      $('html,body').animate({ scrollLeft: ((pos.x - (v.width  / 2)) * scroll.x) }, 0);
-  },
-
-  scrollView: function(evt) {
-      var pos = this.getMousePos(evt);
-      var vsize = this.viewSize();
-      var x = pos.x;
-      var y = pos.y;
-
-      if ((pos.x - (vsize.width/2)) <= 0 ) {
-          x = vsize.width/2;
-      }
-
-      if ((pos.x + (vsize.width/2)) >= this.canvas.width) {
-          x = this.canvas.width - vsize.width/2;
-      }
-
-      if ((pos.y - (vsize.height/2)) <= 0 ) {
-          y = vsize.height/2;
-      }
-
-      if ((pos.y + (vsize.height/2)) >= this.canvas.height) {
-          y = this.canvas.height - vsize.height/2;
-      }
-
-      this.drawView(x, y);
-      this.scrollPage(pos);
-  },
-
-  getMousePos: function(evt) {
-
-      var rect = this.canvas.getBoundingClientRect();
-
-      return {
-          x: evt.clientX - rect.left,
-          y: evt.clientY - rect.top
-      };
-  },
-
-  createCanvas: function() {
+    createCanvas: function() {
         var canvas = document.createElement('canvas');
         canvas.id = "scrollpad";
         canvas.setAttribute('width', 75);
@@ -207,18 +216,6 @@ Object.extend(scrollPad.prototype, {
       }
     },
 
-    background_colour: function(response) {
-        this.canvas.style.background = response.value;
-    },
-
-    border_colour: function(response) {
-        this.canvas.style.WebkitBoxShadow =  '0 0 8px 4px ' + response.value;
-    },
-
-    inner_colour: function(response) {
-        inner_colour_value = response.value;
-    },
-
     loadScrollPad: function() {
         var self = this;
         self.createCanvas();
@@ -248,8 +245,8 @@ Object.extend(scrollPad.prototype, {
         //TODO: fix rendering while drag
     },
 
-    setDrag: function(drag) {
-        this.drag = true;
+    setDrag: function(drg) {
+        this.drag = drg;
     },
 
     initialize: function() {
@@ -258,11 +255,11 @@ Object.extend(scrollPad.prototype, {
         if (b.width > c.width || b.height > c.height) {
             this.loadScrollPad();
         }
-
     }
 });
 
 window.onload = function() {
     s = new scrollPad();
+    //drag.js
     InitDragDrop();
 }
