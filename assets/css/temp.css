@@ -1,0 +1,109 @@
+.redButton{
+  display: inline-block;
+  width:100px;
+  height:40px;
+  background-color:red;
+  text-transform: uppercase;
+  position:relative;
+  padding:0px;
+  line-height:10px;
+  text-align:center;
+  text-decoration: none !important;
+  font-weight:bold;
+  color:#fff;
+  font-size:14px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  bottom:0;
+  margin:0;
+
+  transition:0.15s linear;
+  -moz-transition:0.15s linear;
+  -webkit-transition:0.15s linear;
+
+  box-shadow:0 5px 0 darkred,0 0 10px rgba(0,0,0,0.3) inset, 8px 10px 4px rgba(0,0,0,0.4);
+  -moz-box-shadow:0 5px 0 darkred,0 0 10px rgba(0,0,0,0.3) inset, 8px 10px 4px rgba(0,0,0,0.4);
+  -webkit-box-shadow:0 5px 0 darkred,0 0 10px rgba(0,0,0,0.3) inset, 8px 10px 4px rgba(0,0,0,0.4);
+
+  border-radius:30%;
+  -moz-border-radius:30%;
+  -webkit-border-radius:30%;
+}
+
+.redButton:active{
+  bottom:-5px;
+
+  box-shadow:0 0 0 darkred,0 0 20px rgba(0,0,0,0.5) inset;
+  -moz-box-shadow:0 0 0 darkred,0 0 20px rgba(0,0,0,0.5) inset;
+  -webkit-box-shadow:0 0 0 darkred,0 0 20px rgba(0,0,0,0.5) inset;
+}
+
+.btn {
+    -moz-box-shadow: inset 0px 1px 0px 0px #bbdaf7;
+    -webkit-box-shadow: inset 0px 1px 0px 0px #bbdaf7;
+    box-shadow: inset 0px 1px 0px 0px #bbdaf7;
+    background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #7f7f7f), color-stop(1, #535353) );
+    background: -moz-linear-gradient( center top, #7f7f7f 5%, #535353 100% );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7f7f7f', endColorstr='#535353');
+    background-color: #79bbff;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+    color: #ffffff;
+    font-family: Trebuchet MS;
+    font-size: 10pt;
+    font-weight: bold;
+    padding: 5px 17px;
+    text-decoration: none;
+    text-shadow: 1px 1px 0px #1b4a7a;
+}
+
+.btn:hover {
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #7f7f7f), color-stop(1, #ededed) );
+  background:-moz-linear-gradient( center top, #7f7f7f 5%, #ededed 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7f7f7f', endColorstr='#ededed');
+  background-color:#52BFFF;
+}
+
+.btn:active {
+  position:relative;
+  top:2px;
+}
+
+body{
+    background-image:url(../images/wood.jpg);
+}
+
+.container {
+  width:300px;
+  margin-left:auto;
+  margin-right:auto;
+  padding-top:300px;
+}
+
+label {
+    float: left;
+    width: 5em;
+    padding-left: 30px;
+    text-align: left;
+}
+
+div.option {
+    padding-top: 5px;
+}
+
+.options {
+    background: #F8F8FF;
+    border: 1px #CCC solid;
+    border-radius: 0px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
+}
+
+.buttons {
+  margin-left: 110px;
+}

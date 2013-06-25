@@ -1,14 +1,30 @@
 <html>
 <head>
     <title>Options</title>
-</head>
-<body >
-    Background: <input id="background_colour" value="black" > <br/>
-    Border: <input id="border_colour" value="rgba(82, 168, 236, 0.6)" > <br/>
-    View: <input id="inner_colour" value="white" > <br/>
-    <button id="save">Save</button> <button id="reset">Reset</button>
-    <div id="status"></div>
-
+    <script type="text/javascript" src="../lib/vendor/jscolor/jscolor.js"></script>
+    <link rel="stylesheet" type="text/css" href="../assets/css/temp.css">
+<body>
+  <div class="container">
+      <div class="options">
+        <div class="option">
+            <label for="background"> Border: </label>
+            <input id="border_colour" name="background" class="color {hash:true}" value="18EDDF">
+        </div>
+        <div class="option">
+            <label for="border">bgcolor: </label>
+            <input id="background_colour" name="border" class="color {hash:true}" value="000000">
+        </div>
+        <div class="option">
+            <label for="view"> View: </label>
+            <input id="inner_colour" name="view" class="color {hash:true}" value="FFFFFF"> <br/>
+        </div>
+        <div class="buttons">
+            <button id="save" class="btn">Save</button>
+            <button id="reset" class="btn">Reset</button>
+            <div id="status"></div>
+        </div>
+      </div>
+  </div>
     <script type="text/javascript" src="../lib/options.js"></script>
 </body>
 </html>
