@@ -79,7 +79,7 @@ body{
   width:300px;
   margin-left:auto;
   margin-right:auto;
-  padding-top:300px;
+  padding-top:100px;
 }
 
 label {
@@ -106,4 +106,19 @@ div.option {
 
 .buttons {
   margin-left: 110px;
+}
+
+.heading {
+  width:700px;
+  margin-left:auto;
+  margin-right:auto;
+  padding-top:100px;
+}
+
+h1.heading  {
+  font-family: Trebuchet MS;
+  font-size: 25pt;
+  font-weight: bold;
+  text-decoration: none;
+  text-shadow: 1px 1px 0px #1b4a7a;
 }
