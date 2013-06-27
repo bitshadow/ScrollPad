@@ -73,6 +73,8 @@
 
 body{
     background-image:url(../images/wood.jpg);
+    text-shadow: #FFF 0px 1px 0px;
+    font: normal .9em/1.3 "Helvetica Neue", "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 .container {
@@ -153,4 +155,18 @@ h1.heading  {
     background-color: rgb(255, 255, 255);
     background-position: initial initial;
     background-repeat: initial initial;
+}
+#credits {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+#credits span {
+  color: black;
+  opacity: 0.7;
+}
+
+#credits a {
+    color: black;
 }
