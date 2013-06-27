@@ -97,7 +97,7 @@ div.option {
 
 .options {
     margin-top: 220px;
-    background: #C2C4C3;
+    background: #DCE1F7;
     border: 1px #000 solid;
     border-radius: 0px;
     border-bottom-left-radius: 10px;
@@ -160,11 +160,19 @@ h1.heading  {
   position: absolute;
   right: 10px;
   bottom: 10px;
+  background: #DCE1F7;
+  border: 1px #000 solid;
+  border-radius: 10px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
+  font-family: Trebuchet MS; 
+  font-size: 15pt;
+  padding: 10px;
 }
 
 #credits span {
   color: black;
   opacity: 0.7;
+  
 }
 
 #credits a {
