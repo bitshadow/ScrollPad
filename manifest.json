@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "content_scripts": [ { 
-      "js": [ "lib/jquery.js","lib/drag.js", 
+      "js": [ "lib/jquery.js","lib/drag.js", "lib/util.js",
               "lib/scrollpad.js",
               "lib/vendor/jscolor/jscolor.js"
             ],
