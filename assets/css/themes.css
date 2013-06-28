@@ -156,16 +156,16 @@ h1.heading  {
     background-position: initial initial;
     background-repeat: initial initial;
 }
+
 #credits {
   position: absolute;
   right: 10px;
   bottom: 10px;
   background: #DCE1F7;
-  border: 1px #000 solid;
-  border-radius: 10px;
+  border-radius: 5px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
   font-family: Trebuchet MS; 
-  font-size: 15pt;
+  font-size: 10pt;
   padding: 10px;
 }
 
