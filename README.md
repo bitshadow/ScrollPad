@@ -11,7 +11,7 @@ Scrollpad is Chromium add-on to provide an interface for scrolling webpages easy
   - Enjoy!
 
 * **SnapShot:**
-![alt tag](https://github.com/jigneshhk/ScrollPad/blob/master/assets/images/scrollpad.png)
+![My image](https://github.com/jigneshhk/ScrollPad/blob/master/assets/images/scrollpad.png)
 
 ###Contributors:
 
