@@ -3,7 +3,7 @@ ScrollPad
 
 Scrollpad is Chromium add-on to provide an interface for scrolling webpages easy way.
 
-* **TO Install**
+* **To Install:**
   - Download zip or git clone.
   - Go To chrome -> extensions.
   - Use Developers Mode.
